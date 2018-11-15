@@ -209,9 +209,9 @@ int main() {
   //start in lane 1;
   int lane = 1;
   int lane_change_wp = 0;
-  int count = -1;
 
-  h.onMessage([&count, &map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy,&lane,&lane_change_wp](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+
+  h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy,&lane,&lane_change_wp](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -320,9 +320,10 @@ int main() {
                     double check_speed = sqrt(vx*vx + vy*vy);
                     double check_car_s = sensor_fusion[i][5];
                     check_car_s += ((double) prev_size*0.02*check_speed);
-                    if( (check_car_s > car_s) && ( (check_car_s - car_s) < 30) )
+
+                    if( (check_car_s >= car_s) && ( (check_car_s - car_s) < 30) )
                     {
-                        if((check_car_s - car_s) < 8)
+                        if((check_car_s - car_s) < 10)
                             speedlimit.push_back(make_pair(check_car_s, check_speed));
                         car_left = true;
                         if((check_car_s-car_s) > 20 && car_ahead_cond<=1)
@@ -336,7 +337,7 @@ int main() {
 
           				}
                     }
-                    if(fabs(check_car_s - car_s)<8)
+                    if(fabs(check_car_s - car_s)< 15)
                     {
                         car_left = true;
                     }
@@ -348,9 +349,10 @@ int main() {
                     double check_speed = sqrt(vx*vx + vy*vy);
                     double check_car_s = sensor_fusion[i][5];
                     check_car_s += ((double) prev_size*0.02*check_speed);
-                    if( (check_car_s > car_s) && ( (check_car_s - car_s) < 30) )
+
+                    if( (check_car_s >= car_s) && ( (check_car_s - car_s) < 30) )
                     {
-                        if((check_car_s - car_s) < 8)
+                        if((check_car_s - car_s) < 10)
                             speedlimit.push_back(make_pair(check_car_s, check_speed));
                         car_right = true;
                         if((check_car_s-car_s) > 20 && car_ahead_cond<=1)
@@ -364,7 +366,7 @@ int main() {
 
           				}
                     }
-                    if(fabs(check_car_s - car_s)<8)
+                    if(fabs(check_car_s - car_s)< 15)
                     {
                         car_right = true;
                     }
@@ -378,21 +380,16 @@ int main() {
                 if(car_ahead_cond > 0)
                 {
                     if(car_left==false && lane>0)
-                    {   if(count==-1 || (car_s - count)>5)
-                        {
+                    {
                          lane-=1;
                          ref_vel-=0.224;
-                         count=car_s;
-                        }
+
                     }
                     else if(car_right==false && lane<2)
                     {
-                        if(count==-1 || (car_s - count)>5)
-                        {
                          lane+=1;
                          ref_vel-=0.224;
-                         count = car_s;
-                        }
+
                     }
                     else
                     {
@@ -409,7 +406,7 @@ int main() {
                     }
                 }
             }
-            
+
             speedlimit.clear();
 
           	vector<double> ptsx;
