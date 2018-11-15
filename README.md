@@ -17,7 +17,7 @@ The car was able to drive 4.32 miles as mentioned in the project rubric and the 
 * The car stays in its lane except for time between lane changing. 
 * The car was smoothly able to change its lanes. 
 
-
+> Below is the readme from udacity project repo. 
 
 # CarND-Path-Planning-Project
 Self-Driving Car Engineer Nanodegree Program
