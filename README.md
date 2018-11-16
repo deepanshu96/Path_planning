@@ -1,22 +1,5 @@
 # CarND-Path-Planning-Project
 * ### [Main Source Code File](https://github.com/deepanshu96/Path_planning/blob/master/src/main.cpp)
-## Model Documentation
-
-* ### Prediction
-In the first step the model deals with sensor fusion data provided by the car at each timestep in which the locations of other cars in left, right and center lane are determined to predict the future state of the ego vehicle. In this I used a vector container to keep the speeds of the car ahead and car adjacent in left and right lane to our ego vehicle. This was done to record the minimum speed amongst them in order to avoid collision for safe driving. Part of code mentioned below:-
-
-* ### Behaviour Planning
-In this step the behaviour of ego vehicle was defined as to what next state and action it must choose given the current conditions obtained from the prediction step. The car moved in the adjacent lanes only if the vehicle ahead was going slow and at a certain minimum distance from our ego vehicle. 
-
-* ### Trajectory generation
-The trajectory generation step included generating a smooth trajectory for our vehicle using the spline function in order to reduce sudden jerk and high accelerations or breaking. The previous trajectory points generated not used in the new trajectory were used in order to get a smooth resulting trajectory. This was all mentioned in the q and a video provided in the project lessons. 
-
-The car was able to drive 4.32 miles as mentioned in the project rubric and the below conditions were not violated in this period:-
-* Car was always in the given speed limit. 
-* Max acceleration and jerk were not exceeded.
-* Car did not have a collision. 
-* The car stays in its lane except for time between lane changing. 
-* The car was smoothly able to change its lanes. 
 
 > Below is the readme from udacity project repo. 
 
