@@ -109,7 +109,44 @@ In the first step the model deals with sensor fusion data provided by the car at
  ```
 
 * ### Behaviour Planning
-In this step the behaviour of ego vehicle was defined as to what next state and action it must choose given the current conditions obtained from the prediction step. The car moved in the adjacent lanes only if the vehicle ahead was going slow and at a certain minimum distance from our ego vehicle. 
+In this step the behaviour of ego vehicle was defined as to what next state and action it must choose given the current conditions obtained from the prediction step. The car moved in the adjacent lanes only if the vehicle ahead was going slow and at a certain minimum distance from our ego vehicle. Behaviour planning part of code mentioned below :-
+
+```
+ //Behaviour Planning
+            if(car_ahead==true)
+            {
+                if(car_ahead_cond > 0)
+                {
+                    if(car_left==false && lane>0)
+                    {
+                         lane-=1;
+                         ref_vel-=0.224;
+
+                    }
+                    else if(car_right==false && lane<2)
+                    {
+                         lane+=1;
+                         ref_vel-=0.224;
+
+                    }
+                    else
+                    {
+                        if(car_ahead_cond==1)
+                        {
+                            double spd2 = speedlimit[0].second;
+                            ref_vel = spd2*2.237;
+                        }
+                        else if(car_ahead_cond==2)
+                        {
+                            double spd2 = speedlimit[0].second;
+                            ref_vel = spd2*2.237-5;
+                        }
+                    }
+                }
+            }
+
+            speedlimit.clear();
+```
 
 * ### Trajectory generation
 The trajectory generation step included generating a smooth trajectory for our vehicle using the spline function in order to reduce sudden jerk and high accelerations or breaking. The previous trajectory points generated not used in the new trajectory were used in order to get a smooth resulting trajectory. This was all mentioned in the q and a video provided in the project lessons. 
