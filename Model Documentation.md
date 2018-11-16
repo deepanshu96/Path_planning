@@ -6,6 +6,109 @@ Self-Driving Car Engineer Nanodegree Program
 * ### Prediction
 In the first step the model deals with sensor fusion data provided by the car at each timestep in which the locations of other cars in left, right and center lane are determined to predict the future state of the ego vehicle. In this I used a vector container to keep the speeds of the car ahead and car adjacent in left and right lane to our ego vehicle. This was done to record the minimum speed amongst them in order to avoid collision for safe driving. Part of code mentioned below:-
 
+'''
+
+            bool car_left, car_right, car_ahead;
+            car_left = false;
+            car_right = false;
+            car_ahead = false;
+            int car_ahead_cond, car_right_cond, car_left_cond;
+
+            car_ahead_cond = car_right_cond = car_left_cond = 0;
+
+            vector<pair<double, double> > speedlimit;
+            for(int i=0;i<sensor_fusion.size();i++)
+            {
+                float d = sensor_fusion[i][6];
+                if(d < (2+4*lane+2) && d > (2+4*lane-2) ) //same lane
+                {
+                    double vx = sensor_fusion[i][3];
+                    double vy = sensor_fusion[i][4];
+                    double check_speed = sqrt(vx*vx + vy*vy);
+                    double check_car_s = sensor_fusion[i][5];
+                    check_car_s += ((double) prev_size*0.02*check_speed);
+
+                    if( (check_car_s > car_s) && ( (check_car_s - car_s) < 30) )
+                    {
+                        speedlimit.push_back(make_pair(check_car_s, check_speed));
+                        car_ahead = true;
+                        if((check_car_s-car_s) > 20 && car_ahead_cond<=1)
+          				{
+                            car_ahead_cond = 1;
+          				}
+          				else
+          				{
+
+                            car_ahead_cond = 2;
+
+          				}
+
+                    }
+
+                }
+                else if(d>0 && d> (2+4*lane-2-4) && d<(2+4*lane-2) && d<12 ) //left lane
+                {
+                    double vx = sensor_fusion[i][3];
+                    double vy = sensor_fusion[i][4];
+                    double check_speed = sqrt(vx*vx + vy*vy);
+                    double check_car_s = sensor_fusion[i][5];
+                    check_car_s += ((double) prev_size*0.02*check_speed);
+
+                    if( (check_car_s >= car_s) && ( (check_car_s - car_s) < 30) )
+                    {
+                        if((check_car_s - car_s) < 10)
+                            speedlimit.push_back(make_pair(check_car_s, check_speed));
+                        car_left = true;
+                        if((check_car_s-car_s) > 20 && car_ahead_cond<=1)
+          				{
+                            car_left_cond = 1;
+          				}
+          				else
+          				{
+
+                            car_left_cond = 2;
+
+          				}
+                    }
+                    if(fabs(check_car_s - car_s)< 15)
+                    {
+                        car_left = true;
+                    }
+                }
+                else if(d>0 && d<12 && d>(2+4*lane +2) && d<(2+4*lane+2+4)) //right lane
+                {
+                    double vx = sensor_fusion[i][3];
+                    double vy = sensor_fusion[i][4];
+                    double check_speed = sqrt(vx*vx + vy*vy);
+                    double check_car_s = sensor_fusion[i][5];
+                    check_car_s += ((double) prev_size*0.02*check_speed);
+
+                    if( (check_car_s >= car_s) && ( (check_car_s - car_s) < 30) )
+                    {
+                        if((check_car_s - car_s) < 10)
+                            speedlimit.push_back(make_pair(check_car_s, check_speed));
+                        car_right = true;
+                        if((check_car_s-car_s) > 20 && car_ahead_cond<=1)
+          				{
+                            car_right_cond = 1;
+          				}
+          				else
+          				{
+
+                            car_right_cond = 2;
+
+          				}
+                    }
+                    if(fabs(check_car_s - car_s)< 15)
+                    {
+                        car_right = true;
+                    }
+                }
+            }
+            sort(speedlimit.begin(), speedlimit.end());
+            
+'''
+
 * ### Behaviour Planning
 In this step the behaviour of ego vehicle was defined as to what next state and action it must choose given the current conditions obtained from the prediction step. The car moved in the adjacent lanes only if the vehicle ahead was going slow and at a certain minimum distance from our ego vehicle. 
 
