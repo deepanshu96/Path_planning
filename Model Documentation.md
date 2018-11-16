@@ -6,7 +6,7 @@ Self-Driving Car Engineer Nanodegree Program
 * ### Prediction
 In the first step the model deals with sensor fusion data provided by the car at each timestep in which the locations of other cars in left, right and center lane are determined to predict the future state of the ego vehicle. In this I used a vector container to keep the speeds of the car ahead and car adjacent in left and right lane to our ego vehicle. This was done to record the minimum speed amongst them in order to avoid collision for safe driving. Part of code mentioned below:-
 
-'''
+```
 
             bool car_left, car_right, car_ahead;
             car_left = false;
@@ -106,8 +106,7 @@ In the first step the model deals with sensor fusion data provided by the car at
                 }
             }
             sort(speedlimit.begin(), speedlimit.end());
-            
-'''
+ ```
 
 * ### Behaviour Planning
 In this step the behaviour of ego vehicle was defined as to what next state and action it must choose given the current conditions obtained from the prediction step. The car moved in the adjacent lanes only if the vehicle ahead was going slow and at a certain minimum distance from our ego vehicle. 
